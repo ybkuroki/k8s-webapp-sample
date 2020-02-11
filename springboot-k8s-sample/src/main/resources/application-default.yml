@@ -1,0 +1,48 @@
+# DB接続設定
+datasource:
+  driverClassName: org.h2.Driver
+  url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  username: testusr
+  password: testusr
+  maxPoolSize: 20
+  packageToScan: managesys.model
+  # Hibernate設定
+  # 実行したSQLを整形して表示、起動時に必ずdrop tableする
+  hibernate:
+    dialect: org.hibernate.dialect.H2Dialect
+    showSql: true
+    formatSql: true
+    ddlAuto: create-drop
+    nonContextualCreation: false # PostgreSQL利用時には必ずTrueに設定する
+
+spring: 
+  messages: # メッセージ設定
+    basename: messages, messages-validation
+    encoding: UTF-8
+  security:
+    user.password: unused        # Spring SecurityのBasic認証をOFFにする
+  h2.console.enabled: true       # H2DBのコンソールにアクセスできるように設定(/localhost:8080/h2-console/)
+  resources.add-mappings: true   # RestAPI仕様書を有効にする(http://localhost:8080/swagger-ui.html)
+ 
+# WhiteLabel機能を無効にする
+server:
+  error:
+    whitelabel.enabled: false
+    path: /error
+
+extension:
+  security.enabled: true          # ログイン認証機能を有効にする
+  master.generator.enabled: true  # マスターデータの生成
+  test.generator.enabled: true    # テストデータの生成
+  cors.enabled: true              # CORS制約の設定
+  docs.restapi.enabled: true      # RestAPI仕様書を有効にする
+ 
+# Spring Actuatorの設定
+# /api/healthにて、DB情報とディスク容量を表示
+management:
+  endpoints:
+    web:
+      base-path: /api
+      exposure.include: health, env, beans, loggers
+  endpoint.health.show-details: always
+  db.enabled: true

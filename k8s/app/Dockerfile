@@ -1,0 +1,36 @@
+# docker build -t appserver_k8s:1.2 -f k8s/app/Dockerfile .
+# Dockerfile
+# ビルド環境
+FROM gradle:5.6.3-jdk8 AS Builder
+
+# GitHubよりソースコードを取得
+#RUN git clone https://github.com/ybkuroki/springboot-webapp-sample.git
+COPY ./springboot-k8s-sample /home/gradle/springboot-k8s-sample
+
+# 作業ディレクトリへ移動
+WORKDIR /home/gradle/springboot-k8s-sample
+
+# ビルド実行
+RUN gradle bootJar
+
+
+# 実行環境
+FROM openjdk:8-jdk AS Runtime
+
+# apt-getのパッケージリスト更新
+RUN apt-get update
+
+# タイムゾーンを東京に設定する
+ENV TZ 'Asia/Tokyo'
+
+# ビルド環境でビルドしたjarファイルを追加
+COPY --from=Builder /home/gradle/springboot-k8s-sample/build/libs/springboot-k8s-sample-1.2.0.jar ./app.jar
+
+# jarファイルのタイムスタンプ変更
+RUN sh -c 'touch ./app.jar'
+
+# 8080番ポートを公開
+EXPOSE 8080
+
+# 実行時引数としてDocker環境向けプロファイルを指定してjarファイルを実行する
+ENTRYPOINT java -Dspring.profiles.active=k8s -Djava.security.egd=file:/dev/./urandom -jar ./app.jar
