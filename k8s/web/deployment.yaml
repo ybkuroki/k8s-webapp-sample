@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: webserver-k8s
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: webserver-k8s
@@ -17,23 +17,3 @@ spec:
         image: webserver_k8s:1.0
         ports:
         - containerPort: 80
-        volumeMounts:
-        - name: nginx-conf
-          mountPath: /etc/nginx/nginx.conf
-          subPath: nginx.conf
-        - name: server-conf
-          mountPath: /etc/nginx/conf.d/server.conf
-          subPath: server.conf
-      volumes:
-      - name: nginx-conf
-        configMap: 
-          name: nginx-conf
-          items:
-            - key: nginx.conf
-              path: nginx.conf
-      - name: server-conf
-        configMap: 
-          name: server-conf
-          items:
-            - key: server.conf
-              path: server.conf

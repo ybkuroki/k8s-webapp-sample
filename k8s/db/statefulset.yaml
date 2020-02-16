@@ -17,18 +17,7 @@ spec:
       containers:
        - name: dbserver
          image: dbserver_k8s:1.0
+         imagePullPolicy: IfNotPresent
          ports:
           - containerPort: 5432
-         volumeMounts:
-         - name: pvc-db-volume
-           mountPath: /var/lib/postgresql
-  volumeClaimTemplates:
-  - metadata:
-      name: pvc-db-volume
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1G
 

@@ -4,7 +4,7 @@ metadata:
   name: 
     appserver-k8s
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: appserver-k8s
@@ -16,7 +16,7 @@ spec:
       containers:
       - name: appserver
         image: appserver_k8s:1.2
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
         env:
