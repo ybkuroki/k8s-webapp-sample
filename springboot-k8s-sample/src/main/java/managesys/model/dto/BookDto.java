@@ -2,6 +2,7 @@ package managesys.model.dto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 import managesys.model.Book;
 import managesys.model.Category;
@@ -9,7 +10,7 @@ import managesys.model.Format;
 
 public class BookDto {
     // 登録
-    public static class RegBook {
+    public static class RegBook implements Serializable {
         @Size(min = 3, max = 50, message="{Size.book.title}")
         private String title;
         @Size(min = 10, max = 20, message="{Size.book.isbn}")
@@ -62,7 +63,7 @@ public class BookDto {
     }
 
     // 更新、削除
-    public static class ChgBook {
+    public static class ChgBook implements Serializable {
         @NotNull
         private int id = 0;
         @Size(min = 3, max = 50, message="{Size.book.title}")

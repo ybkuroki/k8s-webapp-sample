@@ -2,6 +2,7 @@ package managesys.model;
 
 import java.util.List;
 import java.util.Optional;
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import managesys.repository.AbstractRepository;
 
 @Entity(name = "CATEGORY_MASTER")
-public class Category {
+public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

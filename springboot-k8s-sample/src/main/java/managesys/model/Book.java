@@ -2,6 +2,7 @@ package managesys.model;
 
 import java.util.List;
 import java.util.Optional;
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 import managesys.repository.AbstractRepository;
 
 @Entity(name = "BOOK")
-public class Book {
+public class Book implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

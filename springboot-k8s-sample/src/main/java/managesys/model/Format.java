@@ -2,6 +2,7 @@ package managesys.model;
 
 import java.util.List;
 import java.util.Optional;
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ import org.springframework.util.StringUtils;
 import managesys.repository.AbstractRepository;
 
 @Entity(name = "FORMAT_MASTER")
-public class Format {
+public class Format implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

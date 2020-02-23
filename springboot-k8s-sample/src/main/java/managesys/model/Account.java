@@ -2,6 +2,7 @@ package managesys.model;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import managesys.repository.AbstractRepository;
 
 @Entity(name = "ACCOUNT_MASTER")
-public class Account {
+public class Account implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

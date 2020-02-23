@@ -1,6 +1,17 @@
-## k8s-test-sample
+# k8s-webapp-sample
 
-### start minikube
+## Preface
+TBD
+
+## Architecture
+TBD
+
+## Install
+### Requirements
+TBD
+
+## Starting Kubernetes
+### Start minikube
 ```bash
 # start minikube
 minikube start --vm-driver=virtualbox
@@ -12,7 +23,7 @@ minikube status
 kubectl get pods --all-namespaces
 ```
 
-### build docker images
+### Create docker images
 ```bash
 # check docker-env. set docker environment variable.
 minikube docker-env
@@ -23,7 +34,7 @@ docker build -t dbserver_k8s:1.0 -f k8s/db/Dockerfile .
 docker build -t webserver_k8s:1.0 -f k8s/web/Dockerfile .
 ```
 
-### create deployments and services
+### Create deployments and services
 ```bash
 # redis
 kubectl apply -f k8s/redis/deployment.yaml
@@ -50,12 +61,74 @@ kubectl get pods
 # check deployed services
 kubectl get services
 
+# check all services and pods
+kubectl get all
+
 # check LoadBalancer's URL
 minikube service nginx-lb-k8s --url
 ```
 
-### how to access a container of a pod
-
+### Access a container of a pod
 ```bash
+# db server
+kubectl exec -it dbserver-k8s-sfs-0 --container dbserver -- psql -U testusr testdb
+
+# app server
+kubectl exec -it appserver-k8s-67dbd4f8b8-z5f6v --container appserver -- /bin/bash
+
+# web server
 kubectl exec -it webserver-k8s-54b64f8dc-gdn8l --container nginx -- /bin/bash
 ```
+
+### Delete deployments and services
+```bash
+# delete all services and pods
+kubectl delete all --all
+
+# or perform the following commands
+# redis
+kubectl delete -f k8s/redis/deployment.yaml
+kubectl delete -f k8s/redis/service.yaml
+
+# db
+kubectl delete -f k8s/db/statefulset.yaml
+kubectl delete -f k8s/db/service.yaml
+
+# apserver
+kubectl delete -f k8s/app/deployment.yaml
+kubectl delete -f k8s/app/service.yaml
+
+# web
+kubectl delete -f k8s/web/deployment.yaml
+kubectl delete -f k8s/web/service.yaml
+
+# LB
+kubectl delete -f k8s/lb/loadbalancer.yaml
+```
+
+### Commands for troubleshooting
+```bash
+# summary for any pod
+kubectl describe pod [pod name]
+# summary for any service
+kubectl describe service [service name]
+
+# check log of any pod
+kubectl log [pod name]
+```
+
+### Stop minikube
+```bash
+minikube stop
+```
+
+### Delete minikube cluster
+```bash
+minikube delete
+```
+
+## Project Mapping
+TBD
+
+## License
+TBD

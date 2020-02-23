@@ -5,13 +5,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 import org.springframework.security.core.GrantedAuthority;
 
 import managesys.repository.AbstractRepository;
 
 @Entity(name = "AUTHORITY_MASTER")
-public class AccountAuthority implements GrantedAuthority {
+public class AccountAuthority implements GrantedAuthority, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
