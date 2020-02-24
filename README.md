@@ -109,12 +109,12 @@ kubectl delete -f k8s/lb/loadbalancer.yaml
 ### Commands for troubleshooting
 ```bash
 # summary for any pod
-kubectl describe pod [pod name]
+kubectl describe pods [pod name]
 # summary for any service
-kubectl describe service [service name]
+kubectl describe services [service name]
 
 # check log of any pod
-kubectl log [pod name]
+kubectl logs [pod name]
 ```
 
 ### Stop minikube
