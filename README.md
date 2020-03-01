@@ -11,6 +11,8 @@ For more information about this application, see:
 - App
   - [springboot-webapp-sample](https://github.com/ybkuroki/springboot-webapp-sample)
 
+This sample project based on [this project](https://github.com/dayan888/springdemo_k8s).
+
 ## Architecture
 This sample deployed three layers to three services : webserver-k8s-service, appserver-k8s-service, dbserver-k8s-service.
 There are three pods in the each service, but DB service is only one.
