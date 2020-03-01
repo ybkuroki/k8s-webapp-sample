@@ -1,16 +1,49 @@
 # k8s-webapp-sample
 
 ## Preface
-TBD
+This project is a sample for running the web application on Kubernetes.
+The web application consists of three layers: Web, App, DB.
+
+For more information about this application, see:
+
+- Web
+  - [vuejs-webapp-sample](https://github.com/ybkuroki/vuejs-webapp-sample)
+- App
+  - [springboot-webapp-sample](https://github.com/ybkuroki/springboot-webapp-sample)
 
 ## Architecture
-TBD
+This sample deployed three layers to three services : webserver-k8s-service, appserver-k8s-service, dbserver-k8s-service.
+There are three pods in the each service, but DB service is only one.
+Different middleware and applications are deployed on each pod.
+Web pods run a Vue.js application on Nginx, App pods run a Spring Boot application on Tomcat. The DB pod uses PostgreSQL.
+
+![architecture](./images/architecture.svg)
+
+## Requirements
+The following requirements for running are required:
+
+- Windows10 Home
+- Minikube
+- Virtual box
 
 ## Install
-### Requirements
-TBD
+Perform the following steps:
 
-## Starting Kubernetes
+1. Download and install [Virtual Box](https://www.virtualbox.org/wiki/Downloads).
+1. Download [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) Command and Add the binary in to your PATH.
+1. Download and install [Minikube](https://kubernetes.io/ja/docs/tasks/tools/install-minikube/).
+
+## Starting this sample on Kubernetes
+Perform the following steps:
+
+1. Start minikube.
+1. Create docker images.
+1. Create deployments and services.
+1. Access LoadBalancer's URL in your browser and confirm that this application has started.
+1. Delete deployments and services.
+1. Stop minikube.
+1. Delete minikube cluster.
+
 ### Start minikube
 ```bash
 # start minikube
@@ -128,7 +161,17 @@ minikube delete
 ```
 
 ## Project Mapping
-TBD
+The follwing figure is the map of this sample project.
+
+```
+- k8s                   ... Define yml for Kubernetes.
+  - app                 ... Define deployments for application service.
+  - db                  ... Define deployments for database service.
+  - lb                  ... Define deployments for load balancer.
+  - redis               ... Define deployments for redis.
+  - web                 ... Define deployments for web service.
+- springboot-k8s-sample ... This source are deployed on application service.
+```
 
 ## License
-TBD
+The License of this sample is *MIT License*.
