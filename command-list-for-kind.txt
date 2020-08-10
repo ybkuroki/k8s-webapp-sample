@@ -1,0 +1,49 @@
+# https://qiita.com/sourjp/items/281d2189516823950291
+# https://kind.sigs.k8s.io/
+
+kind create cluster --config k8s-cluster.yml
+kubectl cluster-info
+
+# build docker images
+docker build -t appserver_k8s:1.2 -f k8s/app/Dockerfile .
+docker build -t dbserver_k8s:1.0 -f k8s/db/Dockerfile .
+docker build -t webserver_k8s:1.0 -f k8s/web/Dockerfile .
+
+kind load docker-image appserver_k8s:1.2
+kind load docker-image dbserver_k8s:1.0
+kind load docker-image webserver_k8s:1.0
+
+# redis
+kubectl apply -f k8s/redis/deployment.yaml
+kubectl apply -f k8s/redis/service.yaml
+
+# db
+kubectl apply -f k8s/db/statefulset.yaml
+kubectl apply -f k8s/db/service.yaml
+
+# apserver (For Local environment)
+kubectl apply -f k8s/app/deployment.yaml
+kubectl apply -f k8s/app/service.yaml
+
+# web
+kubectl apply -f k8s/web/deployment.yaml
+kubectl apply -f k8s/web/service.yaml
+
+# LB
+kubectl apply -f k8s/lb/loadbalancer.yaml
+
+# check deployed pods
+kubectl get pods
+
+# check deployed services
+kubectl get services
+
+# check all services and pods
+kubectl get all
+
+http://localhost:30001/
+
+# delete all services and pods
+kubectl delete all --all
+
+kind delete cluster
