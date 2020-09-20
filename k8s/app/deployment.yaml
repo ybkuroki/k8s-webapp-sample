@@ -4,7 +4,12 @@ metadata:
   name: 
     appserver-k8s
 spec:
-  replicas: 1
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
   selector:
     matchLabels:
       app: appserver-k8s
@@ -15,20 +20,33 @@ spec:
     spec:
       containers:
       - name: appserver
-        image: appserver_k8s:1.2
-        imagePullPolicy: IfNotPresent
+        image: appserver_k8s:1.3
         ports:
         - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 5
+          successThreshold: 1
         env:
-          - name: SPRING_PROFILES_ACTIVE
+          - name: CONFIGOR_ENV
             value: "k8s"
-          - name: DB_URL
-            value: "jdbc:postgresql://dbserver-k8s-service:5432/testdb"
-          - name: DB_USERNAME
+          - name: CONFIGOR_DATABASE_HOST
+            value: "dbserver-k8s-service"
+          - name: CONFIGOR_DATABASE_PORT
+            value: "5432"
+          - name: CONFIGOR_DATABASE_DBNAME
+            value: "testdb"
+          - name: CONFIGOR_DATABASE_USERNAME
             value: "testusr"
-          - name: DB_PASSWORD
+          - name: CONFIGOR_DATABASE_PASSWORD
             value: "testusr"
-          - name: REDIS_HOST
+          - name: CONFIGOR_REDIS_ENABLED
+            value: "true"
+          - name: CONFIGOR_REDIS_HOST
             value: "redis-k8s-service"
-          - name: REDIS_PORT
+          - name: CONFIGOR_REDIS_PORT
             value: "6379"     

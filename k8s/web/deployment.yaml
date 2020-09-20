@@ -3,7 +3,12 @@ kind: Deployment
 metadata:
   name: webserver-k8s
 spec:
-  replicas: 1
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
   selector:
     matchLabels:
       app: webserver-k8s
@@ -17,3 +22,11 @@ spec:
         image: webserver_k8s:1.0
         ports:
         - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 5
+          successThreshold: 1

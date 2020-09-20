@@ -1,36 +1,38 @@
-# docker build -t appserver_k8s:1.2 -f k8s/app/Dockerfile .
-# Dockerfile
-# ビルド環境
-FROM gradle:5.6.3-jdk8 AS Builder
+## docker exec -it app-server /bin/sh
 
-# GitHubよりソースコードを取得
-#RUN git clone https://github.com/ybkuroki/springboot-webapp-sample.git
-COPY ./springboot-k8s-sample /home/gradle/springboot-k8s-sample
+# this stage for builder.
+FROM golang:1.14-alpine as Builder
 
-# 作業ディレクトリへ移動
-WORKDIR /home/gradle/springboot-k8s-sample
+# set environment variable.
+ENV GOOS=linux
+ENV GOARCH=amd64
+ENV GO111MODULE=on
 
-# ビルド実行
-RUN gradle bootJar
+# update packages.
+RUN apk add --no-cache sqlite-libs sqlite-dev build-base gcc git
+
+# get souce code from github.com
+RUN cd / && git clone https://github.com/ybkuroki/go-webapp-sample.git
+
+# move working directory.
+WORKDIR /go-webapp-sample
+
+# install dependency packages.
+RUN go mod download
+
+# build source code.
+RUN go build -o app ./main.go
 
 
-# 実行環境
-FROM openjdk:8-jdk AS Runtime
+# this stage for runtime.
+FROM alpine:3 as Runtime
 
-# apt-getのパッケージリスト更新
-RUN apt-get update
+# copy artifacts from builder.
+COPY --from=Builder /go-webapp-sample/app ./app
+COPY --from=Builder /go-webapp-sample/application.k8s.yml ./application.k8s.yml
 
-# タイムゾーンを東京に設定する
-ENV TZ 'Asia/Tokyo'
-
-# ビルド環境でビルドしたjarファイルを追加
-COPY --from=Builder /home/gradle/springboot-k8s-sample/build/libs/springboot-k8s-sample-1.2.0.jar ./app.jar
-
-# jarファイルのタイムスタンプ変更
-RUN sh -c 'touch ./app.jar'
-
-# 8080番ポートを公開
+# release 8080 port
 EXPOSE 8080
 
-# 実行時引数としてDocker環境向けプロファイルを指定してjarファイルを実行する
-ENTRYPOINT java -Dspring.profiles.active=k8s -Djava.security.egd=file:/dev/./urandom -jar ./app.jar
+# perform the following command when a container have started.
+ENTRYPOINT ./app -env=k8s
