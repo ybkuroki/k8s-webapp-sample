@@ -3,22 +3,6 @@ kind: Ingress
 metadata:
   name: ingress-k8s
 spec:
-  rules:
-  - host: example.com
-    http:
-      paths:
-      - path: /*
-        backend:
-          serviceName: nginx-np-k8s
-          servicePort: 80
-      - path: /v2/*
-        backend:
-          serviceName: web2
-          servicePort: 8080
   backend:
-    serviceName: nginx-np-k8s
+    serviceName: webserver-k8s-service
     servicePort: 80
-  tls:
-  - hosts:
-    - example.com
-    secretName: tls-sample
